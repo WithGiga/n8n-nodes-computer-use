@@ -1,11 +1,11 @@
 {
     "name": "n8n-nodes-computer-use",
     "version": "0.1.0",
-    "description": "",
+    "description": "Computer Use Node powered by WithGiga AI.",
     "license": "MIT",
     "homepage": "",
     "keywords": ["n8n-community-node-package"],
-    "author": { "name": "Dominic Damoah", "email": "dominic.imakestuff@gmail.com" },
+    "author": { "name": "Engineering Team", "email": "engineering@withgiga.ai" },
     "repository": {
         "type": "git",
         "url": "https://github.com/WithGiga/n8n-nodes-computer-use.git"
