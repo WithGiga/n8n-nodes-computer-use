@@ -1,11 +1,16 @@
 {
     "name": "n8n-nodes-computer-use",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "description": "Computer Use Node powered by WithGiga AI.",
     "license": "MIT",
     "homepage": "",
-    "keywords": ["n8n-community-node-package"],
-    "author": { "name": "Engineering Team", "email": "engineering@withgiga.ai" },
+    "keywords": [
+        "n8n-community-node-package"
+    ],
+    "author": {
+        "name": "Engineering Team",
+        "email": "engineering@withgiga.ai"
+    },
     "repository": {
         "type": "git",
         "url": "https://github.com/WithGiga/n8n-nodes-computer-use.git"
@@ -19,12 +24,18 @@
         "release": "n8n-node release",
         "prepublishOnly": "n8n-node prerelease"
     },
-    "files": ["dist"],
+    "files": [
+        "dist"
+    ],
     "n8n": {
         "n8nNodesApiVersion": 1,
         "strict": true,
-        "credentials": ["dist/credentials/ComputerUseApi.credentials.js"],
-        "nodes": ["dist/nodes/ComputerUse/ComputerUse.node.js"]
+        "credentials": [
+            "dist/credentials/ComputerUseApi.credentials.js"
+        ],
+        "nodes": [
+            "dist/nodes/ComputerUse/ComputerUse.node.js"
+        ]
     },
     "devDependencies": {
         "@n8n/node-cli": "*",
@@ -33,5 +44,7 @@
         "release-it": "^19.0.4",
         "typescript": "5.9.2"
     },
-    "peerDependencies": { "n8n-workflow": "*" }
+    "peerDependencies": {
+        "n8n-workflow": "*"
+    }
 }

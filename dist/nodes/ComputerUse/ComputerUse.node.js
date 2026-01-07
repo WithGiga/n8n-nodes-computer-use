@@ -2,12 +2,10 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ComputerUse = void 0;
 const n8n_workflow_1 = require("n8n-workflow");
-const user_1 = require("./resources/user");
-const company_1 = require("./resources/company");
 class ComputerUse {
     constructor() {
         this.description = {
-            displayName: 'Computer Use',
+            displayName: 'Computer Use WithGiga AI',
             name: 'computerUse',
             icon: { light: 'file:computerUse.svg', dark: 'file:computerUse.dark.svg' },
             group: ['transform'],
@@ -15,7 +13,7 @@ class ComputerUse {
             subtitle: '={{$parameter["operation"] + ": " + $parameter["resource"]}}',
             description: 'Interact with the Computer Use API',
             defaults: {
-                name: 'Computer Use',
+                name: 'Computer Use WithGiga AI',
             },
             usableAsTool: true,
             inputs: [n8n_workflow_1.NodeConnectionTypes.Main],
@@ -36,20 +34,196 @@ class ComputerUse {
                     noDataExpression: true,
                     options: [
                         {
-                            name: 'User',
-                            value: 'user',
-                        },
-                        {
-                            name: 'Company',
-                            value: 'company',
+                            name: 'Request',
+                            value: 'request',
                         },
                     ],
-                    default: 'user',
+                    default: 'request',
                 },
-                ...user_1.userDescription,
-                ...company_1.companyDescription,
+                {
+                    displayName: 'Operation',
+                    name: 'operation',
+                    type: 'options',
+                    noDataExpression: true,
+                    displayOptions: {
+                        show: {
+                            resource: ['request'],
+                        },
+                    },
+                    options: [
+                        {
+                            name: 'Send and Wait',
+                            value: 'sendAndWait',
+                            description: 'Send a request to the Computer Use API and wait for completion',
+                        },
+                    ],
+                    default: 'sendAndWait',
+                },
+                {
+                    displayName: 'Computer Name',
+                    name: 'computerName',
+                    type: 'string',
+                    default: '',
+                    required: true,
+                    placeholder: 'e.g. Office-PC-01',
+                    displayOptions: {
+                        show: {
+                            resource: ['request'],
+                            operation: ['sendAndWait'],
+                        },
+                    },
+                    description: 'Identifier or friendly name of the computer to control',
+                },
+                {
+                    displayName: 'Platform',
+                    name: 'platform',
+                    type: 'options',
+                    options: [
+                        {
+                            name: 'Windows',
+                            value: 'windows',
+                        },
+                        {
+                            name: 'macOS',
+                            value: 'macos',
+                        },
+                        {
+                            name: 'Linux',
+                            value: 'linux',
+                        },
+                        {
+                            name: 'Other',
+                            value: 'other',
+                        },
+                    ],
+                    default: 'windows',
+                    required: true,
+                    displayOptions: {
+                        show: {
+                            resource: ['request'],
+                            operation: ['sendAndWait'],
+                        },
+                    },
+                    description: 'Operating system of the target computer',
+                },
+                {
+                    displayName: 'Max Duration (hours)',
+                    name: 'maxDurationHours',
+                    type: 'number',
+                    typeOptions: {
+                        minValue: 0.1,
+                    },
+                    default: 1,
+                    required: true,
+                    displayOptions: {
+                        show: {
+                            resource: ['request'],
+                            operation: ['sendAndWait'],
+                        },
+                    },
+                    description: 'Maximum time the computer-use session is allowed to run',
+                },
+                {
+                    displayName: 'User Prompt',
+                    name: 'userPrompt',
+                    type: 'string',
+                    typeOptions: {
+                        rows: 3,
+                    },
+                    default: '',
+                    required: true,
+                    displayOptions: {
+                        show: {
+                            resource: ['request'],
+                            operation: ['sendAndWait'],
+                        },
+                    },
+                    description: 'High-level instructions provided by the end user',
+                },
+                {
+                    displayName: 'Goal Prompt',
+                    name: 'goalPrompt',
+                    type: 'string',
+                    typeOptions: {
+                        rows: 3,
+                    },
+                    default: '',
+                    required: true,
+                    displayOptions: {
+                        show: {
+                            resource: ['request'],
+                            operation: ['sendAndWait'],
+                        },
+                    },
+                    description: 'Concrete goal the agent should accomplish on the computer',
+                },
+                {
+                    displayName: 'System Prompt',
+                    name: 'systemPrompt',
+                    type: 'string',
+                    typeOptions: {
+                        rows: 3,
+                    },
+                    default: '',
+                    required: false,
+                    displayOptions: {
+                        show: {
+                            resource: ['request'],
+                            operation: ['sendAndWait'],
+                        },
+                    },
+                    description: '(Optional) System-level instructions or constraints for the agent behavior',
+                },
+                {
+                    displayName: 'Callback URL',
+                    name: 'callbackUrl',
+                    type: 'string',
+                    default: '',
+                    required: false,
+                    placeholder: 'https://example.com/computer-use-callback',
+                    displayOptions: {
+                        show: {
+                            resource: ['request'],
+                            operation: ['sendAndWait'],
+                        },
+                    },
+                    description: '(Optional) URL to receive asynchronous updates or final result from the session',
+                },
             ],
         };
+    }
+    async execute() {
+        const items = this.getInputData();
+        const returnData = [];
+        for (let i = 0; i < items.length; i++) {
+            const resource = this.getNodeParameter('resource', i);
+            const operation = this.getNodeParameter('operation', i);
+            if (resource === 'request' && operation === 'sendAndWait') {
+                const computerName = this.getNodeParameter('computerName', i);
+                const platform = this.getNodeParameter('platform', i);
+                const maxDurationHours = this.getNodeParameter('maxDurationHours', i);
+                const userPrompt = this.getNodeParameter('userPrompt', i);
+                const goalPrompt = this.getNodeParameter('goalPrompt', i);
+                const systemPrompt = this.getNodeParameter('systemPrompt', i, '');
+                const callbackUrl = this.getNodeParameter('callbackUrl', i, '');
+                const result = {
+                    resource,
+                    operation,
+                    computerName,
+                    platform,
+                    maxDurationHours,
+                    userPrompt,
+                    goalPrompt,
+                    systemPrompt: systemPrompt || undefined,
+                    callbackUrl: callbackUrl || undefined,
+                };
+                returnData.push({ json: result });
+            }
+            else {
+                throw new Error(`Unsupported resource/operation: ${resource}/${operation}`);
+            }
+        }
+        return [returnData];
     }
 }
 exports.ComputerUse = ComputerUse;
