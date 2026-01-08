@@ -7,7 +7,7 @@ class ComputerUse {
         this.description = {
             displayName: 'Computer Use WithGiga AI',
             name: 'computerUse',
-            icon: { light: 'file:computerUse.svg', dark: 'file:computerUse.dark.svg' },
+            icon: 'file:computerUse.svg',
             group: ['transform'],
             version: 1,
             subtitle: '={{$parameter["operation"] + ": " + $parameter["resource"]}}',
@@ -191,39 +191,6 @@ class ComputerUse {
                 },
             ],
         };
-    }
-    async execute() {
-        const items = this.getInputData();
-        const returnData = [];
-        for (let i = 0; i < items.length; i++) {
-            const resource = this.getNodeParameter('resource', i);
-            const operation = this.getNodeParameter('operation', i);
-            if (resource === 'request' && operation === 'sendAndWait') {
-                const computerName = this.getNodeParameter('computerName', i);
-                const platform = this.getNodeParameter('platform', i);
-                const maxDurationHours = this.getNodeParameter('maxDurationHours', i);
-                const userPrompt = this.getNodeParameter('userPrompt', i);
-                const goalPrompt = this.getNodeParameter('goalPrompt', i);
-                const systemPrompt = this.getNodeParameter('systemPrompt', i, '');
-                const callbackUrl = this.getNodeParameter('callbackUrl', i, '');
-                const result = {
-                    resource,
-                    operation,
-                    computerName,
-                    platform,
-                    maxDurationHours,
-                    userPrompt,
-                    goalPrompt,
-                    systemPrompt: systemPrompt || undefined,
-                    callbackUrl: callbackUrl || undefined,
-                };
-                returnData.push({ json: result });
-            }
-            else {
-                throw new Error(`Unsupported resource/operation: ${resource}/${operation}`);
-            }
-        }
-        return [returnData];
     }
 }
 exports.ComputerUse = ComputerUse;

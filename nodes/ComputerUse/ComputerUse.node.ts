@@ -1,15 +1,10 @@
-import {
-	NodeConnectionTypes,
-	type INodeExecutionData,
-	type INodeType,
-	type INodeTypeDescription,
-} from 'n8n-workflow';
+import { NodeConnectionTypes, type INodeType, type INodeTypeDescription } from 'n8n-workflow';
 
 export class ComputerUse implements INodeType {
 	description: INodeTypeDescription = {
 		displayName: 'Computer Use WithGiga AI',
 		name: 'computerUse',
-		icon: { light: 'file:computerUse.svg', dark: 'file:computerUse.dark.svg' },
+		icon: 'file:computerUse.svg',
 		group: ['transform'],
 		version: 1,
 		subtitle: '={{$parameter["operation"] + ": " + $parameter["resource"]}}',
@@ -196,5 +191,4 @@ export class ComputerUse implements INodeType {
 		],
 	};
 
-	
 }
